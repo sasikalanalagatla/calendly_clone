@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Calendly Clone</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-color);
+        }
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="logo">Calendly</div>
+            <h2 style="margin-bottom: 8px; text-align: center;">Welcome back</h2>
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 32px;">Login to your account</p>
+
+            <div th:if="${param.error}" style="color: var(--error-color); background: #fef3f2; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;">
+                Invalid email or password.
+            </div>
+            <div th:if="${param.logout}" style="color: var(--success-color); background: #ecfdf3; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;">
+                You have been logged out.
+            </div>
+            <div th:if="${param.success}" style="color: var(--success-color); background: #ecfdf3; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;">
+                Registration successful! Please login.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label class="label">Email address</label>
+                    <input type="email" name="username" class="input" placeholder="Enter your email" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="label">Password</label>
+                    <input type="password" name="password" class="input" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">Login</button>
+            </form>
+
+            <div style="margin-top: 24px; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
+                Don't have an account? <a th:href="@{/register}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Sign up</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

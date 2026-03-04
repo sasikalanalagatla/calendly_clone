@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account - Calendly Clone</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-color);
+        }
+        .register-card {
+            width: 100%;
+            max-width: 440px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="card register-card">
+            <div class="logo">Calendly</div>
+            <h2 style="margin-bottom: 8px; text-align: center;">Sign up for free</h2>
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 32px;">Create your specialized scheduling link</p>
+
+            <div th:if="${param.error}" style="color: var(--error-color); background: #fef3f2; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;" th:text="${param.error}">
+            </div>
+
+            <form th:action="@{/register}" method="post">
+                <div class="form-group">
+                    <label class="label">Full Name</label>
+                    <input type="text" name="fullName" class="input" placeholder="e.g. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Email address</label>
+                    <input type="email" name="email" class="input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Password</label>
+                    <input type="password" name="password" class="input" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">Get Started</button>
+            </form>
+
+            <div style="margin-top: 24px; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
+                Already have an account? <a th:href="@{/login}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Log in</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Meeting - Calendly Clone</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .booking-layout {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-color);
+            padding: 40px 20px;
+        }
+        .booking-card {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            min-height: 500px;
+            padding: 0;
+            overflow: hidden;
+        }
+        .booking-sidebar {
+            width: 320px;
+            padding: 40px;
+            border-right: 1px solid var(--border-color);
+        }
+        .booking-main {
+            flex: 1;
+            padding: 40px;
+            background: white;
+        }
+        .time-slot {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            color: var(--primary-color);
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .time-slot:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-layout">
+        <div class="card booking-card">
+            <!-- Sidebar -->
+            <div class="booking-sidebar">
+                <p th:text="${user.fullName}" style="color: var(--text-muted); font-weight: 600; margin-bottom: 8px;">User Name</p>
+                <h1 th:text="${eventType.name}" style="font-size: 1.5rem; margin-bottom: 16px;">Meeting Name</h1>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); margin-bottom: 12px;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span th:text="${eventType.duration} + ' min'">30 min</span>
+                </div>
+                <p th:text="${eventType.description}" style="font-size: 0.9375rem; color: var(--text-muted);">Description</p>
+            </div>
+
+            <!-- Main Content (Calendar/Slots Mockup) -->
+            <div class="booking-main">
+                <h2 style="margin-bottom: 24px;">Select a Date & Time</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                    <!-- Simple static calendar mockup -->
+                    <div style="border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; margin-bottom: 16px;">March 2026</div>
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; font-size: 0.75rem; color: var(--text-muted);">
+                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 8px;">
+                            <!-- Placeholder days -->
+                            <div th:each="i : ${#numbers.sequence(1, 31)}" 
+                                 th:text="${i}" 
+                                 th:class="${i == 4 ? 'btn-primary' : ''}"
+                                 style="padding: 8px; border-radius: 50%; font-size: 0.875rem; cursor: pointer;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Slots Mockup -->
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 16px;">Wednesday, March 4</div>
+                        <div style="max-height: 300px; overflow-y: auto; padding-right: 8px;">
+                            <a href="#" class="time-slot">09:00am</a>
+                            <a href="#" class="time-slot">09:30am</a>
+                            <a href="#" class="time-slot">10:00am</a>
+                            <a href="#" class="time-slot">10:30am</a>
+                            <a href="#" class="time-slot">11:00am</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
