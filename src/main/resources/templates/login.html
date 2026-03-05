@@ -2,68 +2,98 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Calendly Clone</title>
-    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <title>Login | Calendly</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--surface-color);
+        :root {
+            --blue: #006bff;
+            --blue-hover: #0056cc;
+            --text-dark: #1a1a1a;
+            --text-muted: #666d75;
+            --border: #e6e6e6;
+            --bg-gray: #f8f9fa;
         }
-        .login-card {
-            width: 100%;
-            max-width: 440px;
-            animation: fadeIn 0.5s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .logo {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 32px;
-            text-align: center;
-        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--text-dark); -webkit-font-smoothing: antialiased; }
+
+        .auth-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 60px; }
+        
+        .logo { margin-bottom: 40px; font-weight: 800; font-size: 1.8rem; color: var(--blue); letter-spacing: -1px; display: flex; align-items: center; gap: 8px; text-decoration: none;}
+        .logo svg { width: 32px; height: 32px; }
+
+        .auth-card { width: 100%; max-width: 440px; padding: 40px; }
+        
+        .auth-header { text-align: center; margin-bottom: 32px; }
+        .auth-header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .auth-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
+        .form-group input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1rem; transition: border-color 0.2s; }
+        .form-group input:focus { border-color: var(--blue); outline: none; }
+
+        .btn { width: 100%; padding: 14px; border-radius: 30px; font-weight: 700; font-size: 1rem; cursor: pointer; border: none; transition: 0.2s; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .btn-primary { background: var(--blue); color: white; }
+        .btn-primary:hover { background: var(--blue-hover); }
+
+        .oauth-btn { background: white; border: 1px solid var(--border); color: var(--text-dark); margin-bottom: 24px; font-weight: 600; }
+        .oauth-btn:hover { background: var(--bg-gray); border-color: #ccc; }
+        .oauth-btn svg { width: 20px; height: 20px; }
+
+        .divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .divider:not(:empty)::before { margin-right: 16px; }
+        .divider:not(:empty)::after { margin-left: 16px; }
+
+        .auth-footer { margin-top: 32px; text-align: center; font-size: 0.95rem; color: var(--text-muted); }
+        .auth-footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
+        
+        .error-msg { background: #fff5f5; color: #c53030; padding: 12px; border-radius: 8px; margin-bottom: 24px; border: 1px solid #feb2b2; font-size: 0.9rem; text-align: center; }
+        .success-msg { background: #f0fff4; color: #276749; padding: 12px; border-radius: 8px; margin-bottom: 24px; border: 1px solid #9ae6b4; font-size: 0.9rem; text-align: center; }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="card login-card">
-            <div class="logo">Calendly</div>
-            <h2 style="margin-bottom: 8px; text-align: center;">Welcome back</h2>
-            <p style="color: var(--text-muted); text-align: center; margin-bottom: 32px;">Login to your account</p>
 
-            <div th:if="${param.error}" style="color: var(--error-color); background: #fef3f2; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;">
-                Invalid email or password.
+    <div class="auth-container">
+        <a href="/" class="logo">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="8"/><circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="8"/><path d="M50 22C34.536 22 22 34.536 22 50C22 65.464 34.536 78 50 78" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>
+            Calendly
+        </a>
+
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Log in to your account</h1>
             </div>
-            <div th:if="${param.logout}" style="color: var(--success-color); background: #ecfdf3; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;">
-                You have been logged out.
-            </div>
-            <div th:if="${param.success}" style="color: var(--success-color); background: #ecfdf3; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.875rem;">
-                Registration successful! Please login.
-            </div>
+
+            <a th:href="@{/oauth2/authorization/google}" class="btn oauth-btn">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Log in with Google
+            </a>
+
+            <div class="divider">OR</div>
+
+            <div th:if="${param.error}" class="error-msg">Invalid email or password.</div>
+            <div th:if="${param.logout}" class="success-msg">You have been logged out.</div>
+            <div th:if="${param.success}" class="success-msg">Registration successful! Please login.</div>
 
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
-                    <label class="label">Email address</label>
-                    <input type="email" name="username" class="input" placeholder="Enter your email" required autofocus>
+                    <label>Email Address</label>
+                    <input type="email" name="username" placeholder="Email Address" required autofocus>
                 </div>
                 <div class="form-group">
-                    <label class="label">Password</label>
-                    <input type="password" name="password" class="input" placeholder="Enter your password" required>
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Password" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">Login</button>
+                <button type="submit" class="btn btn-primary">Log in</button>
             </form>
 
-            <div style="margin-top: 24px; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
-                Don't have an account? <a th:href="@{/register}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Sign up</a>
+            <div class="auth-footer">
+                Don't have an account? <a th:href="@{/register}">Sign up</a>
             </div>
         </div>
     </div>
+
 </body>
 </html>

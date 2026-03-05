@@ -7,6 +7,7 @@ import com.clone.calendly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,9 @@ public class DashboardController {
     private final EventTypeRepository eventTypeRepository;
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.findByEmail(userDetails.getUsername());
+    public String dashboard(Model model, @AuthenticationPrincipal Object principal) {
+        String email = extractEmail(principal);
+        User user = userService.findByEmail(email);
         List<EventType> eventTypes = eventTypeRepository.findByUser(user);
         
         model.addAttribute("user", user);
@@ -37,10 +39,20 @@ public class DashboardController {
                                   @RequestParam Integer duration,
                                   @RequestParam String description,
                                   @RequestParam String color,
-                                  @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.findByEmail(userDetails.getUsername());
+                                  @AuthenticationPrincipal Object principal) {
+        String email = extractEmail(principal);
+        User user = userService.findByEmail(email);
         EventType eventType = new EventType(name, duration, description, color, user);
         eventTypeRepository.save(eventType);
         return "redirect:/dashboard";
+    }
+
+    private String extractEmail(Object principal) {
+        if (principal instanceof OAuth2User) {
+            return ((OAuth2User) principal).getAttribute("email");
+        } else if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        }
+        throw new IllegalArgumentException("Unknown principal type");
     }
 }
