@@ -28,8 +28,16 @@ public class PublicBookingController {
             .filter(et -> et.getUser().getId().equals(user.getId()))
             .orElseThrow(() -> new RuntimeException("Event type not found"));
 
+        java.time.LocalDate now = java.time.LocalDate.now();
+        java.time.LocalDate firstOfMonth = now.withDayOfMonth(1);
+        int firstDayOfWeek = firstOfMonth.getDayOfWeek().getValue() % 7;
+        
         model.addAttribute("user", user);
         model.addAttribute("eventType", eventType);
+        model.addAttribute("currentDate", now);
+        model.addAttribute("firstDayOfWeek", firstDayOfWeek);
+        model.addAttribute("daysInMonth", now.lengthOfMonth());
+        
         return "booking-page";
     }
 
