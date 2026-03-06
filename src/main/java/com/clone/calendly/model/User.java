@@ -28,6 +28,16 @@ public class User extends BaseEntity {
 
     private String timezone;
 
+    private int onboardingStep = 1;
+
+    private String usageIntent;
+
+    private String role;
+
+    private boolean googleCalendarConnected = false;
+
+    private boolean onboardingCompleted = false;
+
     public User(String fullName, String email, String password, String slug) {
         this.fullName = fullName;
         this.email = email;

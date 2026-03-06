@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup - Calendar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #006BFF;
+            --blue-light: #E8F3FF;
+            --text-dark: #0B3558;
+            --text-muted: #667D94;
+            --border-color: #E5E7EB;
+            --bg-page: #ffffff;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-page); color: var(--text-dark); -webkit-font-smoothing: antialiased; height: 100vh; display: flex; flex-direction: column; }
+
+        .header { padding: 32px 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.5rem; color: var(--blue); text-decoration: none; }
+        .logo svg { width: 32px; height: 32px; }
+        
+        .progress-container { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .progress-bar-bg { width: 180px; height: 6px; background: #F3F5F7; border-radius: 3px; position: relative; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--blue); border-radius: 3px; }
+
+        .main-container { flex: 1; display: flex; overflow: hidden; }
+        .left-content { flex: 1.2; padding: 100px 100px 60px 140px; overflow-y: auto; }
+        .right-illustration { flex: 1; background: #ffffff; display: flex; align-items: center; justify-content: center; position: relative; border-left: 1px solid var(--border-color); }
+        
+        .setup-heading { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+        .setup-subheading { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 48px; }
+
+        .connect-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; }
+        .connect-info { display: flex; align-items: center; gap: 20px; }
+        .google-icon { width: 40px; height: 40px; }
+        .email-info h5 { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+        .email-info p { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .btn-connect { color: var(--blue); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+
+        .actions { display: flex; align-items: center; justify-content: flex-end; gap: 24px; margin-top: 40px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 32px; }
+        .btn-back { color: var(--text-dark); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-right: auto; }
+        .btn-next { background: var(--blue); color: white; border: none; padding: 14px 48px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-next:hover { background: #0056cc; }
+
+        /* Mockup for Right Content */
+        .calendar-mockup { width: 450px; background: white; border: 1px solid #eee; border-radius: 8px; padding: 0; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        .mock-header { padding: 16px; border-bottom: 1px solid #eee; display: flex; gap: 12px; align-items: center; }
+        .mock-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .mock-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 12px; }
+        .mock-cell { height: 40px; border: 0.5px solid #fafafa; position: relative; }
+        .event-blue { position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; background: #006BFF; border-radius: 4px; opacity: 0.8; }
+        .event-purple { position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; background: #D548F5; border-radius: 4px; opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="/" class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="8"/>
+            <circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="8"/>
+            <path d="M50 22C34.536 22 22 34.536 22 50C22 65.464 34.536 78 50 78" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        Calendly
+    </a>
+    <div class="progress-container">
+        <span>Step 3 of 5</span>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 60%;"></div>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="left-content">
+        <h1 class="setup-heading">Set up how your Google calendar will be used</h1>
+        <p class="setup-subheading">Let Calendly check your calendar for conflicts to avoid double bookings.</p>
+
+        <div class="connect-card">
+            <div class="connect-info">
+                <img src="https://www.gstatic.com/images/branding/product/2x/calendar_2020q4_48dp.png" class="google-icon" alt="Google Calendar">
+                <div class="email-info">
+                    <h5>Google Calendar</h5>
+                    <p th:text="${user.email}">user@gmail.com</p>
+                </div>
+            </div>
+            <a href="#" class="btn-connect">Connect</a>
+        </div>
+
+        <div class="actions">
+            <a href="/setup/step2" class="btn-back">
+                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back
+            </a>
+            <form action="/setup/step3" method="POST">
+                <button type="submit" class="btn-next">Next</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="right-illustration">
+        <div class="calendar-mockup">
+            <div class="mock-header">
+                <div class="mock-dot" style="background:#FF5F56;"></div>
+                <div class="mock-dot" style="background:#FFBD2E;"></div>
+                <div class="mock-dot" style="background:#27C93F;"></div>
+            </div>
+            <div class="mock-grid">
+                <div class="mock-cell"></div><div class="mock-cell"></div><div class="mock-cell"></div><div class="mock-cell"></div><div class="mock-cell"></div><div class="mock-cell"></div><div class="mock-cell"></div>
+                <div class="mock-cell"></div><div class="mock-cell"><div class="event-blue"></div></div><div class="mock-cell"></div><div class="mock-cell"></div><div class="mock-cell"><div class="event-purple"></div></div><div class="mock-cell"></div><div class="mock-cell"></div>
+                <!-- ... grid continues ... -->
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

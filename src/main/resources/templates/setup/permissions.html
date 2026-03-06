@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup - Permissions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #006BFF;
+            --blue-light: #E8F3FF;
+            --text-dark: #0B3558;
+            --text-muted: #667D94;
+            --border-color: #E5E7EB;
+            --bg-page: #f9fbff;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-page); color: var(--text-dark); -webkit-font-smoothing: antialiased; height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+        .permission-card { background: white; width: 480px; padding: 40px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); text-align: center; }
+        
+        .logo-group { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 32px; }
+        .logo-box { width: 64px; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
+        .logo-box img { width: 40px; height: 40px; }
+        .logo-box svg { width: 40px; height: 40px; color: var(--blue); }
+        .sync-icon { color: var(--text-muted); font-size: 1.5rem; }
+
+        .title { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
+        .subtitle { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 32px; line-height: 1.5; }
+
+        .permission-list { text-align: left; margin-bottom: 32px; display: flex; flex-direction: column; gap: 16px; }
+        .permission-item { display: flex; gap: 16px; align-items: flex-start; }
+        .check-circle { width: 20px; height: 20px; background: #00F08F; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .check-circle svg { width: 12px; height: 12px; color: white; }
+        .permission-text { font-size: 0.9rem; font-weight: 500; }
+
+        .actions { display: flex; flex-direction: column; gap: 12px; }
+        .btn-allow { background: var(--blue); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-allow:hover { background: #0056cc; }
+        .btn-cancel { background: transparent; color: var(--text-muted); border: none; padding: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="permission-card">
+    <div class="logo-group">
+        <div class="logo-box">
+             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="8"/>
+                <circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="8"/>
+            </svg>
+        </div>
+        <div class="sync-icon">↔️</div>
+        <div class="logo-box">
+            <img src="https://www.gstatic.com/images/branding/product/2x/calendar_2020q4_48dp.png" alt="Google Calendar">
+        </div>
+    </div>
+
+    <h1 class="title">Allow Calendly to access your Google Calendar?</h1>
+    <p class="subtitle">Calendly needs your permission to manage events so you don't get double-booked.</p>
+
+    <div class="permission-list">
+        <div class="permission-item">
+            <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="permission-text">See your Google Calendar events to find conflicts</span>
+        </div>
+        <div class="permission-item">
+            <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="permission-text">Add and modify events on your Google Calendar</span>
+        </div>
+    </div>
+
+    <form action="/setup/permissions" method="POST" class="actions">
+        <button type="submit" class="btn-allow">Allow Access</button>
+        <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+    </form>
+</div>
+
+</body>
+</html>

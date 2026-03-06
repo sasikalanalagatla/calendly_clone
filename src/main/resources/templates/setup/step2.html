@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup - Role Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #006BFF;
+            --blue-light: #E8F3FF;
+            --text-dark: #0B3558;
+            --text-muted: #667D94;
+            --border-color: #E5E7EB;
+            --bg-page: #ffffff;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-page); color: var(--text-dark); -webkit-font-smoothing: antialiased; height: 100vh; display: flex; flex-direction: column; }
+
+        .header { padding: 32px 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.5rem; color: var(--blue); text-decoration: none; }
+        .logo svg { width: 32px; height: 32px; }
+        
+        .progress-container { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .progress-bar-bg { width: 180px; height: 6px; background: #F3F5F7; border-radius: 3px; position: relative; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--blue); border-radius: 3px; }
+
+        .main-container { flex: 1; display: flex; overflow: hidden; }
+        .left-content { flex: 1.2; padding: 100px 100px 60px 140px; overflow-y: auto; }
+        .right-illustration { flex: 1; background: #f0f7ff; display: flex; align-items: center; justify-content: center; position: relative; border-left: 1px solid var(--border-color); }
+        
+        .setup-heading { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+        .setup-subheading { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 48px; }
+
+        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+        .role-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all 0.2s; background: white; }
+        .role-card:hover { border-color: var(--blue); transform: translateX(5px); }
+        .role-card.selected { border-color: var(--blue); border-width: 2px; padding: 19px; background: var(--blue-light); }
+        .role-emoji { font-size: 1.2rem; }
+        .role-name { font-size: 0.95rem; font-weight: 600; }
+
+        .actions { display: flex; align-items: center; gap: 24px; margin-top: 40px; }
+        .btn-back { color: var(--text-dark); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .btn-next { background: var(--blue); color: white; border: none; padding: 14px 48px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-next:hover { background: #0056cc; }
+
+        /* Avatars for Right Content */
+        .avatar-stack { display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 2; }
+        .avatar-card { background: white; border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 200px; }
+        .avatar-circle { width: 32px; height: 32px; background: #eee; border-radius: 50%; object-fit: cover; }
+        .avatar-info h5 { font-size: 0.8rem; font-weight: 700; margin-bottom: 2px; }
+        .avatar-info p { font-size: 0.7rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="/" class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="8"/>
+            <circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="8"/>
+            <path d="M50 22C34.536 22 22 34.536 22 50C22 65.464 34.536 78 50 78" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        Calendly
+    </a>
+    <div class="progress-container">
+        <span>Step 2 of 5</span>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 40%;"></div>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="left-content">
+        <h1 class="setup-heading">What is your role?</h1>
+        <p class="setup-subheading">Understanding your role will help us set up your first scheduling link.</p>
+
+        <form action="/setup/step2" method="POST" id="roleForm">
+            <input type="hidden" name="role" id="roleValue" value="">
+            
+            <div class="role-grid">
+                <div class="role-card" onclick="selectRole('Finance', this)">
+                    <span class="role-emoji">💰</span>
+                    <span class="role-name">Finance</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Sales', this)">
+                    <span class="role-emoji">📈</span>
+                    <span class="role-name">Sales</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Customer success', this)">
+                    <span class="role-emoji">🔄</span>
+                    <span class="role-name">Customer success</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Recruiting', this)">
+                    <span class="role-emoji">📋</span>
+                    <span class="role-name">Recruiting</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Marketing', this)">
+                    <span class="role-emoji">🚀</span>
+                    <span class="role-name">Marketing</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Education', this)">
+                    <span class="role-emoji">🎓</span>
+                    <span class="role-name">Education</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Consulting', this)">
+                    <span class="role-emoji">💼</span>
+                    <span class="role-name">Consulting</span>
+                </div>
+                <div class="role-card" onclick="selectRole('Other', this)">
+                    <span class="role-emoji">🎩</span>
+                    <span class="role-name">Other</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="/setup/step1" class="btn-back">
+                    <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back
+                </a>
+                <button type="submit" class="btn-next">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="right-illustration">
+        <div style="position: absolute; width: 300px; height: 300px; border: 2px dashed #006BFF; border-radius: 50%; opacity: 0.1;"></div>
+        <div class="avatar-stack">
+            <div class="avatar-card" style="transform: translateX(-20px);">
+                <div class="avatar-circle" style="background: #FFD5E5;"></div>
+                <div class="avatar-info">
+                    <h5>Daniel</h5>
+                    <p>Account Executive</p>
+                </div>
+            </div>
+            <div class="avatar-card" style="transform: translateX(20px);">
+                <div class="avatar-circle" style="background: #D5FFED;"></div>
+                <div class="avatar-info">
+                    <h5>Elena</h5>
+                    <p>Customer support</p>
+                </div>
+            </div>
+            <div class="avatar-card" style="transform: translateX(-10px);">
+                <div class="avatar-circle" style="background: #E5D5FF;"></div>
+                <div class="avatar-info">
+                    <h5>Jennifer</h5>
+                    <p>Marketing Manager</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectRole(val, el) {
+        document.getElementById('roleValue').value = val;
+        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+</script>
+
+</body>
+</html>

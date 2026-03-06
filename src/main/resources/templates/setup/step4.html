@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup - Availability</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #006BFF;
+            --blue-light: #E8F3FF;
+            --text-dark: #0B3558;
+            --text-muted: #667D94;
+            --border-color: #E5E7EB;
+            --bg-page: #ffffff;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-page); color: var(--text-dark); -webkit-font-smoothing: antialiased; height: 100vh; display: flex; flex-direction: column; }
+
+        .header { padding: 32px 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.5rem; color: var(--blue); text-decoration: none; }
+        .logo svg { width: 32px; height: 32px; }
+        
+        .progress-container { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .progress-bar-bg { width: 180px; height: 6px; background: #F3F5F7; border-radius: 3px; position: relative; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--blue); border-radius: 3px; }
+
+        .main-container { flex: 1; display: flex; overflow: hidden; }
+        .left-content { flex: 1.2; padding: 80px 100px 60px 140px; overflow-y: auto; }
+        .right-illustration { flex: 1; background: #f9faff; display: flex; align-items: center; justify-content: center; position: relative; border-left: 1px solid var(--border-color); }
+        
+        .setup-heading { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+        .setup-subheading { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 40px; }
+
+        .availability-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 40px; }
+        
+        .day-row { display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid #f0f0f0; gap: 24px; }
+        .day-row:last-child { border-bottom: none; }
+        
+        .day-check { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; border: 2px solid var(--blue); color: var(--blue); border-radius: 50%; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+        .day-check.disabled { border-color: #ddd; color: #aaa; background: white; }
+        .day-check.enabled { background: var(--blue); color: white; }
+        
+        .day-status { font-size: 0.9rem; font-weight: 600; min-width: 100px; }
+        .day-status.unavailable { color: var(--text-muted); }
+
+        .time-range { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; }
+        .time-select { border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; font-size: 0.9rem; font-family: inherit; color: var(--text-dark); cursor: pointer; }
+        
+        .actions { display: flex; align-items: center; justify-content: space-between; margin-top: 40px; }
+        .btn-back { color: var(--text-dark); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .btn-next { background: var(--blue); color: white; border: none; padding: 14px 48px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-next:hover { background: #0056cc; }
+
+        /* Mockup Widget */
+        .preview-calendar { width: 340px; background: white; border-radius: 12px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        .preview-day { display: flex; flex-direction: column; gap: 8px; }
+        .preview-slot { border: 1.5px solid var(--blue); border-radius: 4px; padding: 10px; color: var(--blue); text-align: center; font-weight: 700; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="/" class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="8"/>
+            <circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="8"/>
+            <path d="M50 22C34.536 22 22 34.536 22 50C22 65.464 34.536 78 50 78" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        Calendly
+    </a>
+    <div class="progress-container">
+        <span>Step 4 of 5</span>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 80%;"></div>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="left-content">
+        <h1 class="setup-heading">When are you available to meet with people?</h1>
+        <p class="setup-subheading">You’ll only be booked during these times (you can change these times and add other schedules later)</p>
+
+        <form action="/setup/step4" method="POST">
+            <div class="availability-card">
+                <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
+                    <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                    Weekly hours
+                </div>
+
+                <!-- Days -->
+                <div class="day-row">
+                    <div class="day-check disabled">S</div>
+                    <div class="day-status unavailable">Unavailable</div>
+                </div>
+                <div class="day-row">
+                    <div class="day-check enabled">M</div>
+                    <div class="day-status">9:00am – 5:00pm</div>
+                    <div class="time-range">
+                        <select class="time-select"><option>9:00am</option></select>
+                        <span>–</span>
+                        <select class="time-select"><option>5:00pm</option></select>
+                    </div>
+                </div>
+                <!-- ... other days ... -->
+                <div class="day-row">
+                    <div class="day-check enabled">T</div>
+                    <div class="day-status">9:00am – 5:00pm</div>
+                </div>
+                <div class="day-row">
+                    <div class="day-check enabled">W</div>
+                    <div class="day-status">9:00am – 5:00pm</div>
+                </div>
+                <div class="day-row">
+                    <div class="day-check enabled">T</div>
+                    <div class="day-status">9:00am – 5:00pm</div>
+                </div>
+                <div class="day-row">
+                    <div class="day-check enabled">F</div>
+                    <div class="day-status">9:00am – 5:00pm</div>
+                </div>
+                <div class="day-row">
+                    <div class="day-check disabled">S</div>
+                    <div class="day-status unavailable">Unavailable</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="/setup/step3" class="btn-back">
+                    <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back
+                </a>
+                <button type="submit" class="btn-next">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="right-illustration">
+        <div class="preview-calendar">
+            <div style="font-weight: 700; margin-bottom: 24px; text-align: center;">Select a Date & Time</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                 <div>
+                    <div style="font-weight: 700; font-size: 0.8rem; margin-bottom: 12px;">Wednesday, August 16</div>
+                    <div class="preview-day">
+                        <div class="preview-slot">9:00am</div>
+                        <div class="preview-slot">9:30am</div>
+                        <div class="preview-slot" style="background:var(--blue); color:white;">10:00am</div>
+                        <div class="preview-slot">10:30am</div>
+                    </div>
+                 </div>
+                 <div style="display: flex; flex-direction: column; justify-content: center;">
+                     <div style="background: var(--blue-light); border-radius: 8px; padding: 16px; border: 1px solid var(--blue);">
+                        <div style="font-weight: 700; font-size: 0.75rem; color: var(--blue); margin-bottom: 4px;">Confirm</div>
+                        <div style="font-size: 0.7rem; color: var(--text-dark);">10:00am - 10:30am</div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

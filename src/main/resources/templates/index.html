@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Free Online Appointment Scheduling Software | Calendly</title>
@@ -27,10 +27,51 @@
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 24px 80px; background: white; position: relative; z-index: 10; font-size: 0.95rem; }
         .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.6rem; color: var(--blue); text-decoration: none; letter-spacing: -0.5px; }
         .nav-logo svg { width: 34px; height: 34px; color: var(--blue); }
-        .nav-links { display: flex; gap: 40px; font-weight: 600; color: var(--text-dark); align-items: center; margin-left: 20px; }
-        .nav-links a { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 6px; }
-        .nav-links a:hover { color: var(--blue); }
-        .nav-links svg { width: 12px; height: 12px; }
+        .nav-links { display: flex; gap: 32px; font-weight: 600; color: var(--text-dark); align-items: center; margin-left: 20px; }
+        .nav-item { position: relative; height: 100%; display: flex; align-items: center; padding: 10px 0; cursor: pointer; }
+        .nav-item > a { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+        .nav-item:hover > a { color: var(--blue); }
+        .nav-item svg.chevron { width: 10px; height: 10px; transition: transform 0.2s; }
+        .nav-item:hover svg.chevron { transform: rotate(180deg); }
+
+        /* Dropdown Base */
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: white;
+            min-width: 600px;
+            box-shadow: 0 50px 100px -20px rgba(50,50,93,.25), 0 30px 60px -30px rgba(0,0,0,.3);
+            border-radius: 12px;
+            padding: 32px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: grid;
+            z-index: 100;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-item:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Dropdown Layouts */
+        .grid-2-col { grid-template-columns: 1.2fr 1fr; gap: 40px; }
+        .grid-3-col { grid-template-columns: 1fr 1fr 1fr; gap: 40px; min-width: 800px; }
+
+        .menu-section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 20px; font-weight: 700; }
+        .menu-items { display: flex; flex-direction: column; gap: 24px; }
+        .menu-item { display: flex; align-items: flex-start; gap: 16px; text-decoration: none; color: var(--text-dark); transition: transform 0.2s; }
+        .menu-item:hover { transform: translateX(4px); }
+        .menu-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .menu-icon.blue { background: #E8F3FF; color: var(--blue); }
+        .menu-icon.purple { background: #F3E8FF; color: var(--purple-dark); }
+        .menu-icon svg { width: 20px; height: 20px; }
+        .menu-text h5 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+        .menu-text p { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; line-height: 1.4; }
 
         .nav-actions { display: flex; align-items: center; gap: 32px; font-weight: 600; }
         .nav-actions .lang { display: flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-weight: 500; }
@@ -201,9 +242,159 @@
         Calendly
     </a>
     <div class="nav-links">
-        <a href="#">Product <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
-        <a href="#">Solutions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
-        <a href="#">Resources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <!-- Product Dropdown -->
+        <div class="nav-item">
+            <a href="#">Product <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></a>
+            <div class="dropdown-content grid-2-col">
+                <div>
+                    <div class="menu-section-title">Product</div>
+                    <div class="menu-items">
+                        <a th:href="@{/scheduling}" class="menu-item">
+                            <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Scheduling</h5>
+                                <p>Simplified booking for individuals and teams</p>
+                            </div>
+                        </a>
+                        <a href="#" class="menu-item">
+                            <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Notetaker</h5>
+                                <p>Automated meeting summaries and action items</p>
+                            </div>
+                        </a>
+                        <a href="#" class="menu-item">
+                            <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Product overview</h5>
+                                <p>Discover how Calendly works for you</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="menu-section-title">Platform</div>
+                    <div class="menu-items">
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Integrations</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Mobile app</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Browser extension</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Security</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solutions Dropdown -->
+        <div class="nav-item">
+            <a href="#">Solutions <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></a>
+            <div class="dropdown-content grid-3-col">
+                <div>
+                    <div class="menu-section-title">By business size</div>
+                    <div class="menu-items">
+                        <a href="#" class="menu-item">
+                            <div class="menu-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Individuals</h5>
+                                <p>For solopreneurs</p>
+                            </div>
+                        </a>
+                        <a href="#" class="menu-item">
+                            <div class="menu-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Small business</h5>
+                                <p>For growing teams</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="menu-section-title">By team</div>
+                    <div class="menu-items">
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Sales</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Customer success</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Marketing</span>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="menu-section-title">By industry</div>
+                    <div class="menu-items">
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Education</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Technology</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Financial services</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Dropdown -->
+        <div class="nav-item">
+            <a href="#">Resources <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></a>
+            <div class="dropdown-content grid-2-col">
+                <div>
+                    <div class="menu-section-title">Explore</div>
+                    <div class="menu-items">
+                        <a href="#" class="menu-item">
+                            <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Customer stories</h5>
+                                <p>See how businesses are growing with Calendly</p>
+                            </div>
+                        </a>
+                        <a href="#" class="menu-item">
+                            <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                            <div class="menu-text">
+                                <h5>Blog</h5>
+                                <p>Read the latest product and company news</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="menu-section-title">Learn & connect</div>
+                    <div class="menu-items">
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">Help Center</span>
+                        </a>
+                        <a href="#" class="menu-item" style="gap: 12px;">
+                            <svg style="width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+                            <span style="font-size: 0.9rem; font-weight: 500;">API & Developer tools</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
     <div class="nav-actions">
         <a href="#" class="lang">
@@ -211,8 +402,12 @@
             English <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M6 9l6 6 6-6"/></svg>
         </a>
         <a href="#" class="lang" style="color: var(--text-dark);">Talk to sales</a>
-        <a th:href="@{/login}" class="login">Log In</a>
-        <a th:href="@{/register}" class="btn-get-started">Get started</a>
+        <!-- Public Links -->
+        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="login">Log In</a>
+        <a sec:authorize="isAnonymous()" th:href="@{/register}" class="btn-get-started">Get started</a>
+        
+        <!-- Authenticated Links -->
+        <a sec:authorize="isAuthenticated()" th:href="@{/dashboard}" class="btn-get-started">Dashboard</a>
     </div>
 </nav>
 
@@ -238,18 +433,6 @@
                         </svg>
                     </div>
                     <span>Sign up with Google</span>
-                </a>
-
-                <a th:href="@{/oauth2/authorization/microsoft}" class="oauth-btn ms-btn">
-                    <div class="icon-wrapper">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
-                            <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
-                            <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
-                            <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
-                        </svg>
-                    </div>
-                    <span>Sign up with Microsoft</span>
                 </a>
             </div>
 

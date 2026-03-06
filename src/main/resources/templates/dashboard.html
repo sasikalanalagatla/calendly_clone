@@ -68,17 +68,104 @@
         .empty-state p { color: var(--text-muted); margin-bottom: 32px; }
 
         /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-        .modal:target { display: flex; }
-        .modal-content { background: white; padding: 32px; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .modal-header h2 { font-size: 1.5rem; }
-        .close-modal { text-decoration: none; color: var(--text-muted); font-size: 1.5rem; }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95rem; }
         .form-group input:focus { border-color: var(--blue); outline: none; }
+
+        /* Side Drawer */
+        .drawer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; }
+        .drawer { 
+            position: fixed; 
+            top: 0; 
+            right: -600px; 
+            width: 600px; 
+            height: 100%; 
+            background: white; 
+            z-index: 2001; 
+            transition: right 0.3s ease; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+        .drawer.open { right: 0; }
+        .drawer-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .drawer-body { flex: 1; overflow-y: auto; padding: 32px; }
+        .drawer-footer { padding: 24px 32px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 16px; background: #fff; }
+
+        .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; cursor: pointer; }
+        .section-header h3 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+        .section-content { margin-bottom: 32px; }
+        
+        .location-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+        .location-option { 
+            padding: 16px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .location-option:hover { border-color: var(--blue); background: var(--blue-light); }
+        .location-option.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+        .availability-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .availability-row input[type="radio"] { width: 20px; height: 20px; }
+        
+        .schedule-grid { margin-top: 24px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .schedule-day { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .schedule-day:last-child { border-bottom: none; }
+        .day-name { width: 40px; font-weight: 700; color: var(--blue); }
+        .day-status { flex: 1; color: var(--text-muted); }
+        .day-hours { font-weight: 600; }
+
+        /* Create Dropdown */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-menu { 
+            position: absolute; 
+            top: 100%; 
+            right: 0; 
+            margin-top: 8px;
+            background: white; 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            width: 300px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            display: none; 
+            z-index: 1000;
+            padding: 8px 0;
+        }
+        .dropdown-menu.show { display: block; }
+        .dropdown-item { 
+            padding: 16px 24px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px;
+            cursor: pointer; 
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover { background: var(--bg-gray); }
+        .dropdown-item h5 { font-size: 1rem; font-weight: 700; color: #006bff; }
+        .dropdown-item p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+        .dropdown-item .meta { font-size: 0.8rem; font-weight: 600; color: var(--text-dark); margin-top: 2px; }
+
+        .btn-create { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: var(--blue); 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 30px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-create:hover { background: #0056cc; }
+        .btn-create svg { width: 14px; height: 14px; transition: transform 0.2s; }
+        .btn-create.active svg { transform: rotate(180deg); }
     </style>
 </head>
 <body>
@@ -126,31 +213,105 @@
         <div class="top-bar">
             <h1>My Calendly</h1>
             <div style="display: flex; gap: 16px;">
-                <a href="#createModal" class="btn btn-primary">+ Create</a>
+            <div class="dropdown">
+                <button class="btn-create create-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Create
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px; width: 12px; height: 12px;"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" onclick="openCreateModal('ONE_ON_ONE', 'One-on-one')">
+                        <h5>One-on-one</h5>
+                        <div class="meta">1 host &rarr; 1 invitee</div>
+                        <p>Good for coffee chats, 1:1 interviews, etc.</p>
+                    </div>
+                    <div class="dropdown-item" onclick="openCreateModal('GROUP', 'Group')">
+                        <h5>Group</h5>
+                        <div class="meta">1 host &rarr; Multiple invitees</div>
+                        <p>Webinars, online classes, etc.</p>
+                    </div>
+                    <div class="dropdown-item" onclick="openCreateModal('COLLECTIVE', 'Collective')">
+                        <h5>Collective</h5>
+                        <div class="meta">Multiple hosts &rarr; 1 invitee</div>
+                        <p>Panel interviews, group sales calls, etc.</p>
+                    </div>
+                    <div style="border-top: 1px solid var(--border); margin: 8px 0;"></div>
+                    <div class="dropdown-item" onclick="openCreateModal('POLL', 'Meeting poll')">
+                        <h5>Meeting poll</h5>
+                        <p>Let invitees vote on a time to meet</p>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 
         <div class="content-inner">
+            <div th:if="${error}" style="padding: 16px; background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; border-radius: 8px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span th:text="${error}">Error message</span>
+            </div>
             <div class="tabs">
                 <a href="#" class="tab active">Event Types</a>
                 <a href="#" class="tab">Scheduled Events</a>
                 <a href="#" class="tab">Workflows</a>
             </div>
 
-            <div th:if="${eventTypes.empty}" class="empty-state">
+            <div th:if="${eventTypes.empty}" class="empty-state" style="display: flex; flex-direction: column; align-items: center;">
                 <h2>No Event Types yet</h2>
                 <p>Create an event type to start sharing your link and booking meetings.</p>
-                <a href="#createModal" class="btn btn-primary">Create Event Type</a>
+                
+                <div class="dropdown">
+                    <button class="btn-create create-toggle" style="padding: 14px 32px; font-size: 1.1rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Create Event Type
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px; width: 12px; height: 12px;"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="dropdown-menu" style="left: 50%; transform: translateX(-50%); right: auto;">
+                        <div class="dropdown-item" onclick="openCreateModal('ONE_ON_ONE', 'One-on-one')">
+                            <h5>One-on-one</h5>
+                            <div class="meta">1 host &rarr; 1 invitee</div>
+                            <p>Good for coffee chats, 1:1 interviews, etc.</p>
+                        </div>
+                        <div class="dropdown-item" onclick="openCreateModal('GROUP', 'Group')">
+                            <h5>Group</h5>
+                            <div class="meta">1 host &rarr; Multiple invitees</div>
+                            <p>Webinars, online classes, etc.</p>
+                        </div>
+                        <div class="dropdown-item" onclick="openCreateModal('COLLECTIVE', 'Collective')">
+                            <h5>Collective</h5>
+                            <div class="meta">Multiple hosts &rarr; 1 invitee</div>
+                            <p>Panel interviews, group sales calls, etc.</p>
+                        </div>
+                        <div style="border-top: 1px solid var(--border); margin: 8px 0;"></div>
+                        <div class="dropdown-item" onclick="openCreateModal('POLL', 'Meeting poll')">
+                            <h5>Meeting poll</h5>
+                            <p>Let invitees vote on a time to meet</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="event-grid" th:unless="${eventTypes.empty}">
                 <div th:each="type : ${eventTypes}" class="card">
                     <div class="card-header">
                         <div class="card-title" th:text="${type.name}">Meeting Name</div>
+                        <div style="font-size: 0.75rem; background: #eef4ff; color: #006bff; padding: 2px 8px; border-radius: 4px; font-weight: 700; display: inline-block; margin-top: 4px;" th:text="${type.type == 'ONE_ON_ONE' ? 'One-on-One' : (type.type == 'GROUP' ? 'Group' : (type.type == 'COLLECTIVE' ? 'Collective' : 'Poll'))}">Type</div>
                         <svg style="width: 20px; height: 20px; color: var(--text-muted); cursor: pointer;" viewBox="0 0 20 20" fill="currentColor"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                     </div>
-                    <div class="card-duration" th:text="${type.duration} + ' mins, One-on-One'">30 mins</div>
-                    <a th:href="'/' + ${user.slug} + '/' + ${type.id}" class="copy-link" style="margin-bottom: 24px;">view booking page</a>
+                    <div class="card-duration">
+                        <span th:if="${type.location == null}" style="color: #f59e0b; display: flex; align-items: center; gap: 4px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span th:text="${type.duration} + ' min • No location set'"></span>
+                        </span>
+                        <span th:if="${type.location != null}" style="display: flex; align-items: center; gap: 4px;">
+                            <span th:text="${type.duration} + ' min • '"></span>
+                            <span th:text="${type.location == 'GOOGLE_MEET' ? 'Google Meet' : (type.location == 'ZOOM' ? 'Zoom' : (type.location == 'PHONE' ? 'Phone' : 'In Person'))}"></span>
+                        </span>
+                        <span th:text="' • ' + ${type.type == 'ONE_ON_ONE' ? 'One-on-One' : (type.type == 'GROUP' ? 'Group' : (type.type == 'COLLECTIVE' ? 'Collective' : 'Poll'))}"></span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px;">
+                        <span th:text="${type.availabilityType == 'CALENDAR_DAYS' ? 'Weekdays, 9 am - 5 pm • ' + type.availabilityValue + ' days' : 'Weekdays, 9 am - 5 pm'}"></span>
+                    </div>
                     
                     <div class="card-footer">
                         <a href="#" class="copy-link">
@@ -164,42 +325,250 @@
         </div>
     </div>
 
-    <!-- Create Event Type Modal -->
-    <div id="createModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>New Event Type</h2>
-                <a href="#" class="close-modal">&times;</a>
-            </div>
-            <form th:action="@{/event-types}" method="post">
+    <!-- Create Event Type Side Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="drawer" id="eventDrawer">
+        <div class="drawer-header">
+            <h2 id="drawerTitle">New One-on-one</h2>
+            <button class="close-modal" id="closeDrawer" style="background:none; border:none; cursor:pointer;">&times;</button>
+        </div>
+        <div class="drawer-body">
+            <form th:action="@{/event-types}" method="post" id="eventForm">
+                <input type="hidden" name="type" id="eventTypeInput" value="ONE_ON_ONE">
+                <input type="hidden" name="location" id="locationInput" value="">
+                
+                <!-- Event Header -->
                 <div class="form-group">
                     <label>Event Name</label>
                     <input type="text" name="name" placeholder="e.g. Discovery Call" required>
                 </div>
-                <div class="form-group">
-                    <label>Duration (minutes)</label>
-                    <select name="duration">
-                        <option value="15">15 mins</option>
-                        <option value="30" selected>30 mins</option>
-                        <option value="45">45 mins</option>
-                        <option value="60">60 mins</option>
-                    </select>
-                </div>
-                <div class="form-group">
+
+                <div class="form-group" style="margin-top: 20px;">
                     <label>Description</label>
-                    <textarea name="description" rows="3" placeholder="Tell your invitees what this meeting is about."></textarea>
+                    <textarea name="description" placeholder="Write a summary of what the meeting is about" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; resize: vertical; min-height: 80px;"></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Color</label>
-                    <input type="color" name="color" value="#006bff" style="height: 44px; padding: 4px;">
+
+                <!-- Duration Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Duration</h3>
+                    </div>
+                    <div class="form-group">
+                        <div style="display: flex; gap: 12px;">
+                            <select name="duration" id="durationSelect" style="flex:1;">
+                                <option value="15">15 min</option>
+                                <option value="30" selected>30 min</option>
+                                <option value="45">45 min</option>
+                                <option value="60">60 min</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <input type="number" id="customDuration" style="width: 100px; display: none;" placeholder="min">
+                        </div>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 12px; margin-top: 32px;">
-                    <a href="#" class="btn btn-outline" style="flex: 1; text-align: center; border-color: #eee; color: var(--text-dark);">Cancel</a>
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">Create</button>
+
+                <!-- Location Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location</h3>
+                    </div>
+                    <div class="location-grid">
+                        <div class="location-option" data-value="GOOGLE_MEET">
+                            <span>📹</span> Google Meet
+                        </div>
+                        <div class="location-option" data-value="ZOOM">
+                            <span>🎥</span> Zoom
+                        </div>
+                        <div class="location-option" data-value="PHONE">
+                            <span>📞</span> Phone
+                        </div>
+                        <div class="location-option" data-value="IN_PERSON">
+                            <span>📍</span> In Person
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability Section -->
+                <div class="section" style="margin-top: 32px;">
+                    <div class="section-header">
+                        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Availability</h3>
+                    </div>
+                    <p style="font-size: 0.9rem; font-weight: 700; margin-bottom: 20px;">Date-range</p>
+                    
+                    <div class="availability-row">
+                        <input type="radio" name="availabilityType" value="CALENDAR_DAYS" checked>
+                        <div style="flex:1; display: flex; align-items: center; gap: 8px;">
+                            <input type="number" name="availabilityValue" value="60" style="width: 100px; padding: 6px;"> calendar days into the future
+                        </div>
+                    </div>
+                    <div class="availability-row" style="align-items: flex-start; flex-direction: column; gap: 4px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="radio" name="availabilityType" value="DATE_RANGE" id="rangeRadio">
+                            <span>Within a date range</span>
+                        </div>
+                        <div id="dateRangePicker" style="display: none; margin-left: 32px; margin-top: 8px; width: calc(100% - 32px);">
+                            <div style="display: flex; gap: 12px;">
+                                <div style="flex:1;">
+                                    <label style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Start Date</label>
+                                    <input type="date" name="startDate" id="startDateInput" style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 100%;">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">End Date</label>
+                                    <input type="date" name="endDate" id="endDateInput" style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="availability-row">
+                        <input type="radio" name="availabilityType" value="INDEFINITE" id="indefiniteRadio">
+                        <span>Indefinitely into the future</span>
+                    </div>
+
+                    <p style="font-size: 0.9rem; font-weight: 700; margin-top: 32px; margin-bottom: 12px;">Schedule: Working hours (default)</p>
+                    <div class="schedule-grid">
+                        <div class="schedule-day"><div class="day-name">S</div> <div class="day-status">Unavailable</div></div>
+                        <div class="schedule-day"><div class="day-name">M</div> <div class="day-status">9:00am - 5:00pm</div></div>
+                        <div class="schedule-day"><div class="day-name">T</div> <div class="day-status">9:00am - 5:00pm</div></div>
+                        <div class="schedule-day"><div class="day-name">W</div> <div class="day-status">9:00am - 5:00pm</div></div>
+                        <div class="schedule-day"><div class="day-name">T</div> <div class="day-status">9:00am - 5:00pm</div></div>
+                        <div class="schedule-day"><div class="day-name">F</div> <div class="day-status">9:00am - 5:00pm</div></div>
+                        <div class="schedule-day"><div class="day-name">S</div> <div class="day-status">Unavailable</div></div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="maxAttendeesGroup" style="display: none; margin-top: 32px;">
+                    <label>Max attendees per slot</label>
+                    <input type="number" name="maxAttendees" value="10" min="1">
+                </div>
+
+                <!-- Google Calendar Permission Section -->
+                <div th:if="${!user.googleCalendarConnected}" class="section" style="margin-top: 32px; padding: 20px; background: #f0f7ff; border: 1px dashed #006bff; border-radius: 12px; position: relative;">
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <div style="background: white; padding: 8px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 4H5C3.89543 4 3 4.89543 3 6V18C3 19.1046 3.89543 20 5 20H19C20.1046 20 21 19.1046 21 18V6C21 4.89543 20.1046 4 19 4Z" stroke="#4285F4" stroke-width="2"/><path d="M16 2V6" stroke="#4285F4" stroke-width="2"/><path d="M8 2V6" stroke="#4285F4" stroke-width="2"/><path d="M3 10H21" stroke="#4285F4" stroke-width="2"/><circle cx="12" cy="15" r="2" fill="#4285F4"/></svg>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; color: #006bff;">Connect Google Calendar</h4>
+                            <p style="font-size: 0.85rem; color: #4b5563; line-height: 1.5; margin-bottom: 12px;">
+                                Allow Calendly to check your Google Calendar for conflicts and add new events automatically.
+                            </p>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="requestCalendarAccess" id="calendarCheckbox" style="width: 18px; height: 18px;">
+                                <span style="font-size: 0.85rem; font-weight: 600; color: #1f2937;">Approve Google Calendar access</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
+        <div class="drawer-footer">
+            <button class="btn btn-outline" id="cancelDrawer">Cancel</button>
+            <button class="btn btn-primary" onclick="document.getElementById('eventForm').submit()">Create</button>
+        </div>
     </div>
 
+    <script>
+        const toggles = document.querySelectorAll('.create-toggle');
+        const drawer = document.getElementById('eventDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const drawerTitle = document.getElementById('drawerTitle');
+        const eventTypeInput = document.getElementById('eventTypeInput');
+        const maxAttendeesGroup = document.getElementById('maxAttendeesGroup');
+        const durationSelect = document.getElementById('durationSelect');
+        const customDuration = document.getElementById('customDuration');
+        const locationOptions = document.querySelectorAll('.location-option');
+        const locationInput = document.getElementById('locationInput');
+        const dateRangePicker = document.getElementById('dateRangePicker');
+        const availabilityRadios = document.querySelectorAll('input[name="availabilityType"]');
+        const startDateInput = document.getElementById('startDateInput');
+        const endDateInput = document.getElementById('endDateInput');
+
+        // Set default dates for range picker
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.value = today;
+        const nextMonth = new Date();
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        endDateInput.value = nextMonth.toISOString().split('T')[0];
+
+        availabilityRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'DATE_RANGE') {
+                    dateRangePicker.style.display = 'block';
+                } else {
+                    dateRangePicker.style.display = 'none';
+                }
+            });
+        });
+
+        function openCreateModal(type, title) {
+            drawerTitle.innerText = "New " + title;
+            eventTypeInput.value = type;
+            
+            if (type === 'GROUP') {
+                maxAttendeesGroup.style.display = 'block';
+            } else {
+                maxAttendeesGroup.style.display = 'none';
+            }
+            
+            drawer.classList.add('open');
+            overlay.style.display = 'block';
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            document.querySelectorAll('.create-toggle').forEach(b => b.classList.remove('active'));
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            overlay.style.display = 'none';
+        }
+
+        document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+        document.getElementById('cancelDrawer').addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        durationSelect.addEventListener('change', () => {
+            if (durationSelect.value === 'custom') {
+                customDuration.style.display = 'block';
+                customDuration.setAttribute('name', 'duration');
+                durationSelect.removeAttribute('name');
+            } else {
+                customDuration.style.display = 'none';
+                customDuration.removeAttribute('name');
+                durationSelect.setAttribute('name', 'duration');
+            }
+        });
+
+        locationOptions.forEach(opt => {
+            opt.addEventListener('click', () => {
+                locationOptions.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                locationInput.value = opt.dataset.value;
+            });
+        });
+
+        toggles.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = btn.nextElementSibling;
+                
+                // Close other menus
+                document.querySelectorAll('.dropdown-menu').forEach(m => {
+                    if (m !== menu) m.classList.remove('show');
+                });
+                document.querySelectorAll('.create-toggle').forEach(b => {
+                    if (b !== btn) b.classList.remove('active');
+                });
+
+                menu.classList.toggle('show');
+                btn.classList.toggle('active');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                document.querySelectorAll('.create-toggle').forEach(b => b.classList.remove('active'));
+            }
+        });
+    </script>
 </body>
 </html>
